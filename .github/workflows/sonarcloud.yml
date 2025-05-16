@@ -1,33 +1,57 @@
-
-
-name: SonarCloud analysis
-
+name: SonarCloud analysis and Deployment
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
-
 permissions:
-  pull-requests: read 
-
+  pull-requests: read
+  checks: write 
 jobs:
   Analysis:
     runs-on: ubuntu-latest
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
       - name: Analyze with SonarCloud
-
-
         uses: SonarSource/sonarcloud-github-action@4006f663ecaf1f8093e8e4abb9227f6041f52216
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-
-          args:
-
+          args: |
             -Dsonar.projectKey=yonatan-h_ci-cd
             -Dsonar.organization=yonatan-h
-
+            -Dsonar.language=javascript 
           projectBaseDir: .
+
+      - name: Wait for jenkins to succeed
+        uses: fountainhead/action-wait-for-check@v1.2.0
+        id: wait-for-build
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Jenkins  
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Do something with a passing build
+        if: steps.wait-for-build.outputs.conclusion == 'success'
+        run: echo "Build succeeded!  Ready to deploy..." # Placeholder
+
+      - name: Deploy
+        if: steps.wait-for-build.outputs.conclusion == 'success'
+        # Add your deployment logic here.  For example:
+        # - uses: actions/deploy-to-azure@v1
+        #   with:
+        #     ...
+        run: |
+          echo "Deployment logic here.  Replace with your actual deployment steps."
+          echo "For example, deploying to a server, or publishing a package."
+
+      - name: Do something with a failing build
+        if: steps.wait-for-build.outputs.conclusion == 'failure'
+        run: |
+          echo "Build failed!  See the build logs for details."
+          exit 1 
