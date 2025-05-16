@@ -10,7 +10,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'docker compose run --rm app npm test -- --watchAll=false'
+                sh 'docker compose run app npm test -- --watchAll=false'
             }
         }
 
