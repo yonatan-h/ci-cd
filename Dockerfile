@@ -1,4 +1,3 @@
-
 FROM node:24-slim
 
 WORKDIR /usr/src/app
@@ -7,13 +6,15 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 
-RUN npm install
-
+RUN npm install --verbose
 
 COPY . .
+
+RUN npm run build
 
 
 EXPOSE 3000
 
 
-CMD ["npm", "start", "--", "--watchAll=false"]
+CMD ["npm", "start"]
+# no watch all
