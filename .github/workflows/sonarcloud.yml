@@ -26,8 +26,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: |
-            -Dsonar.projectKey=your_project_key
-            -Dsonar.organization=your_organization_key
+            -Dsonar.projectKey=yonatan-h_ci-cd
+            -Dsonar.organization=yonatan-h
             -Dsonar.sources=. 
             -Dsonar.language=javascript 
             -Dsonar.exclusions=node_modules/**,.next/** 
@@ -43,17 +43,29 @@ jobs:
 
       - name: Do something with a passing build
         if: steps.wait-for-build.outputs.conclusion == 'success'
-        run: echo "Build succeeded!  Ready to deploy..." # Placeholder
 
-      - name: Deploy
+      - name: Do something with a passing build
         if: steps.wait-for-build.outputs.conclusion == 'success'
-        # Add your deployment logic here.  For example:
-        # - uses: actions/deploy-to-azure@v1
-        #   with:
-        #     ...
+        run: echo "Build succeeded!  Ready to deploy..."
+
+      - name: Setup SSH for EC2
+        uses: omarhosny206/setup-ssh-for-ec2@v1.0.0
+        with:
+          EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_KEY }} 
+          EC2_URL: ${{ secrets.EC2_HOST }} 
+
+      - name: Deploy to EC2
+        if: steps.wait-for-build.outputs.conclusion == 'success'
+        env:
+          EC2_USER: ${{secrets.EC2_USER}}  
+          REPO_NAME: "ci-cd" 
+          SERVICE_PATH: ""
         run: |
-          echo "Deployment logic here.  Replace with your actual deployment steps."
-          echo "For example, deploying to a server, or publishing a package."
+          echo "Deploying to EC2..."
+          ssh -o StrictHostKeyChecking=no $EC2_USER@${{ secrets.EC2_HOST }} "cd $REPO_NAME && git fetch origin && git reset --hard origin/main"
+          ssh -o StrictHostKeyChecking=no $EC2_USER@${{ secrets.EC2_HOST }} "docker-compose down && docker-compose up -d"
+          ssh -o StrictHostKeyChecking=no $EC2_USER@${{ secrets.EC2_HOST }} "docker system prune -f"
+          echo "Deployment successful!"
 
       - name: Do something with a failing build
         if: steps.wait-for-build.outputs.conclusion == 'failure'
