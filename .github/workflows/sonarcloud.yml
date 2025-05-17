@@ -30,7 +30,7 @@ jobs:
             -Dsonar.organization=your_organization_key
             -Dsonar.sources=. 
             -Dsonar.language=javascript 
-            -Dsonar.exclusions=node_modules/**, .next/** 
+            -Dsonar.exclusions=node_modules/**,.next/** 
           projectBaseDir: .
 
       - name: Wait for jenkins to succeed
