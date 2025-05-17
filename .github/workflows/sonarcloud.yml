@@ -43,9 +43,6 @@ jobs:
 
       - name: Do something with a passing build
         if: steps.wait-for-build.outputs.conclusion == 'success'
-
-      - name: Do something with a passing build
-        if: steps.wait-for-build.outputs.conclusion == 'success'
         run: echo "Build succeeded!  Ready to deploy..."
 
       - name: Setup SSH for EC2
