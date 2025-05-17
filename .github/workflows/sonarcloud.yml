@@ -60,7 +60,7 @@ jobs:
         run: |
           echo "Deploying to EC2..."
           ssh -o StrictHostKeyChecking=no $EC2_USER@${{ secrets.EC2_HOST }} "cd $REPO_NAME && git fetch origin && git reset --hard origin/main"
-          ssh -o StrictHostKeyChecking=no $EC2_USER@${{ secrets.EC2_HOST }} "docker-compose down && docker-compose up -d"
+          ssh -o StrictHostKeyChecking=no $EC2_USER@${{ secrets.EC2_HOST }} "cd $REPO_NAME && docker-compose down && docker-compose up -d"
           ssh -o StrictHostKeyChecking=no $EC2_USER@${{ secrets.EC2_HOST }} "docker system prune -f"
           echo "Deployment successful!"
 
