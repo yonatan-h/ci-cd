@@ -57,17 +57,20 @@ export async function getWeather(
         },
       }
     )
-    .then((response) => {
+    .then(async (response) => {
       //OR then(({data}))
       return {
-        current: parseCurrentWeather(response.data),
+        current: await parseCurrentWeather(response.data),
         daily: parseDailyWeather(response.data),
         hourly: parseHourlyWeather(response.data),
       };
     });
 }
 
-function parseCurrentWeather({ current, daily }: any): CurrentWeatherType {
+export async function parseCurrentWeather({
+  current,
+  daily,
+}: any): Promise<CurrentWeatherType> {
   const {
     temperature_2m: currentTemp,
     wind_speed_10m: windSpeed,
