@@ -9,6 +9,7 @@ import {
 } from "@/api/APICalls";
 import Search from "@/components/search/Search";
 import { useCallback, useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import DayCard from "../components/card/DayCard";
 import Header from "../components/header/Header";
@@ -22,6 +23,8 @@ export default function Home() {
   const [selectedResult, setSelectedResult] = useState<CitySearchType>(
     {} as CitySearchType
   );
+  const [weatherDataIsLoading, setWeatherDataIsLoading] =
+    useState<boolean>(false);
   const [currentHourlyDispayIndex, setCurrentHourlyDispayIndex] =
     useState<number>(0);
   const [hourlyDisplayData, setHourlyDisplayData] = useState<
@@ -70,23 +73,32 @@ export default function Home() {
           ? selectedResult.longitude
           : location.longitude;
 
-      const weatherData = await getWeather(
-        latitude,
-        longitude,
-        Intl.DateTimeFormat().resolvedOptions().timeZone
-      );
+      setWeatherDataIsLoading(true);
+      try {
+        const weatherData = await getWeather(
+          latitude,
+          longitude,
+          Intl.DateTimeFormat().resolvedOptions().timeZone
+        );
 
-      if (weatherData.current) {
-        setCurrentData(weatherData.current);
-      }
+        if (weatherData.current) {
+          setCurrentData(weatherData.current);
+        }
 
-      if (weatherData.daily) {
-        setDailyData(weatherData.daily);
-      }
+        if (weatherData.daily) {
+          setDailyData(weatherData.daily);
+        }
 
-      if (weatherData.hourly) {
-        limitHourlyData(weatherData.hourly);
-        setHourlyData(weatherData.hourly);
+        if (weatherData.hourly) {
+          limitHourlyData(weatherData.hourly);
+          setHourlyData(weatherData.hourly);
+        }
+      } catch (error) {
+        alert(
+          "There was an error fetching the weather data. Please try again later."
+        );
+      } finally {
+        setWeatherDataIsLoading(false);
       }
     };
 
@@ -101,8 +113,11 @@ export default function Home() {
     <main className={`${currentData == null ? "blur-md" : ""} `}>
       {Object.keys(selectedResult).length > 0 && (
         <div className="flex justify-center items-center mt-6">
+          {weatherDataIsLoading && (
+            <AiOutlineLoading3Quarters className="animate-spin" />
+          )}
           <FaMapMarkerAlt className="w-6 h-6 object-contain" />
-          <div className="text-center pl-2 text-foregroundColor text-2xl font-medium ">
+          <div className="text-center pl-2 text-foregroundColor text-2xl font-medium flex gap-3">
             {selectedResult.name}
           </div>
         </div>
