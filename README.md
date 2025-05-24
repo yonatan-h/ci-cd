@@ -1,6 +1,6 @@
 # Weather App
 
-A modern Weather App built with Next.js that provides real-time weather updates for any location.  
+A modern Weather App built with Next.js and jest that provides real-time weather updates for any location.  
 This project uses a full CI/CD pipeline with SonarQube for continuous code quality analysis.
 
 ## Features
