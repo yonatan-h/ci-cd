@@ -10,11 +10,10 @@ RUN npm install --verbose
 
 COPY . .
 
-RUN npm run build
-
-RUN cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/
-
 EXPOSE 3000
 
-CMD ["node", ".next/standalone/server.js"]
-# no watch all
+
+WORKDIR /usr/src/app/.next/standalone
+RUN npm install --production --verbose
+EXPOSE 3000
+CMD ["node", "server.js"]

@@ -10,11 +10,21 @@
 /coverage
 
 # next.js
-/.next/
 /out/
 
 # production
 /build
+
+# Ignore everything in .next
+.next/**
+
+# Allow .next/standalone and its contents
+!.next/standalone
+!.next/standalone/**
+ 
+# But ignore node_modules inside .next/standalone
+.next/standalone/node_modules
+
 
 # misc
 .DS_Store
