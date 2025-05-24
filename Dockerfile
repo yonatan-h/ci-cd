@@ -10,11 +10,10 @@ RUN npm install --verbose
 
 COPY . .
 
-# RUN npm run build
-
-
 EXPOSE 3000
 
 
-CMD ["npm", "run", "dev"]
-# no watch all
+WORKDIR /usr/src/app/.next/standalone
+RUN npm install --production --verbose
+EXPOSE 3000
+CMD ["node", "server.js"]
