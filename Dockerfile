@@ -10,11 +10,11 @@ RUN npm install --verbose
 
 COPY . .
 
-# RUN npm run build
+RUN npm run build
 
+RUN cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/
 
 EXPOSE 3000
 
-
-CMD ["npm", "run", "dev"]
+CMD ["node", ".next/standalone/server.js"]
 # no watch all
