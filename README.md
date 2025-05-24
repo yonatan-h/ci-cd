@@ -7,7 +7,7 @@ This project uses a full CI/CD pipeline with SonarQube for continuous code quali
 
 - 🌦️ Real-time weather information by city or geolocation
 - ⚡ Built with Next.js for fast, server-rendered React apps
-- 📱 Responsive design for mobile and desktop
+- 📱 Responsive design for mobile and desktop devices
 - 🧪 Automated testing and code linting
 - 🚀 CI/CD pipeline with GitHub Actions
 - 📊 SonarQube integration for code quality and security analysis
