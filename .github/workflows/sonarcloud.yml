@@ -21,19 +21,16 @@ jobs:
       - name: Build Next.js project
         run: npm run build
       - name: Run tests with coverage
-        run: npm run test -- --coverage
+        run: npm test -- --coverage --testResultsProcessor=jest-sonar-reporter
       - name: Analyze with SonarCloud
         uses: SonarSource/sonarcloud-github-action@4006f663ecaf1f8093e8e4abb9227f6041f52216
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: |
-            -Dsonar.projectKey=yonatan-h_ci-cd
-            -Dsonar.organization=yonatan-h
-            -Dsonar.sources=. 
-            -Dsonar.language=javascript 
-            -Dsonar.exclusions=node_modules/**,.next/**
           projectBaseDir: .
+
+      - name: Debug test outputs
+        run: ls -R . | grep test-report.xml && ls coverage/
 
       - name: Wait for jenkins to succeed
         uses: fountainhead/action-wait-for-check@v1.2.0
