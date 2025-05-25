@@ -28,7 +28,7 @@ describe("parse jsons", () => {
     expect(result.currentTemp).toEqual(22);
   });
 
-  it("should parse daily weather data correctly", () => {
+  it("should parse daily weather data correctly", async () => {
     const mockInput = {
       daily: {
         time: [1716585600, 1716672000],
@@ -50,10 +50,10 @@ describe("parse jsons", () => {
       },
     ];
 
-    expect(parseDailyWeather(mockInput)).toEqual(expectedOutput);
+    expect(await parseDailyWeather(mockInput)).toEqual(expectedOutput);
   });
 
-  it("should parse and filter hourly weather data correctly", () => {
+  it("should parse and filter hourly weather data correctly", async () => {
     const mockInput = {
       hourly: {
         time: [1716585600, 1716589200, 1716592800],
@@ -87,11 +87,11 @@ describe("parse jsons", () => {
       },
     ];
 
-    const result = parseHourlyWeather(mockInput);
+    const result = await parseHourlyWeather(mockInput);
     expect(result).toEqual(expectedOutput);
   });
 
-  it("should return an empty array if no hourly timestamps match current", () => {
+  it("should return an empty array if no hourly timestamps match current", async () => {
     const mockInput = {
       hourly: {
         time: [1716585600, 1716589200],
@@ -106,10 +106,10 @@ describe("parse jsons", () => {
       },
     };
 
-    expect(parseHourlyWeather(mockInput)).toEqual([]);
+    expect(await parseHourlyWeather(mockInput)).toEqual([]);
   });
 
-  it("should parse city data correctly", () => {
+  it("should parse city data correctly", async () => {
     const mockInput = {
       results: [
         { id: 1, name: "Paris", latitude: 48.8566, longitude: 2.3522 },
@@ -122,16 +122,16 @@ describe("parse jsons", () => {
       { id: 2, name: "London", latitude: 51.5074, longitude: -0.1278 },
     ];
 
-    expect(parseCityData(mockInput)).toEqual(expectedOutput);
+    expect(await parseCityData(mockInput)).toEqual(expectedOutput);
   });
 
-  it("should return an empty array if results is undefined", () => {
+  it("should return an empty array if results is undefined", async () => {
     const mockInput = {}; // no results field
-    expect(parseCityData(mockInput)).toEqual([]);
+    expect(await parseCityData(mockInput)).toEqual([]);
   });
 
-  it("should return an empty array if results is null", () => {
+  it("should return an empty array if results is null", async () => {
     const mockInput = { results: null };
-    expect(parseCityData(mockInput)).toEqual([]);
+    expect(await parseCityData(mockInput)).toEqual([]);
   });
 });
