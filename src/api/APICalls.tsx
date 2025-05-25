@@ -96,7 +96,7 @@ export async function parseCurrentWeather({
   };
 }
 
-function parseDailyWeather({ daily }: any): DailytWeatherType[] {
+export function parseDailyWeather({ daily }: any): DailytWeatherType[] {
   return daily.time.map((time: number, index: number) => {
     return {
       timestamp: time * 1000, //second to milliseconds
@@ -106,7 +106,10 @@ function parseDailyWeather({ daily }: any): DailytWeatherType[] {
   });
 }
 
-function parseHourlyWeather({ hourly, current }: any): HourlyWeatherType[] {
+export function parseHourlyWeather({
+  hourly,
+  current,
+}: any): HourlyWeatherType[] {
   console.log(current.time * 1000);
   return hourly.time
     .map((time: number, index: number) => {
@@ -139,7 +142,7 @@ export async function getCities(cityName: string): Promise<CitySearchType[]> {
     });
 }
 
-function parseCityData(data: any): CitySearchType[] {
+export function parseCityData(data: any): CitySearchType[] {
   return (
     data.results?.map((item: any) => {
       return {
